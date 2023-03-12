@@ -12,6 +12,12 @@ MovieDatabase::MovieDatabase()
     // Replace this line with correct code.
 }
 
+MovieDatabase::~MovieDatabase() {
+    for(int i = 0; i < allMoviePtrs.size(); i++) {
+        delete allMoviePtrs[i];
+    }
+}
+
 bool MovieDatabase::load(const string& filename)
 {
     int count = 0;
@@ -38,9 +44,25 @@ bool MovieDatabase::load(const string& filename)
         infile.ignore(10000, '\n');
 
         
-        Movie m(id, name, year, dirsv, actorsv, genresv, rating);
-        m_movies.insert(id, m);
-
+        Movie* mPtr = new Movie(id, name, year, dirsv, actorsv, genresv, rating);
+        m_movies.insert(id, mPtr);
+        for(int i = 0; i < dirsv.size(); i++) {
+            m_directorToMovies.insert(toLower(dirsv[i]), mPtr); // issue is im inserting the address of
+        }
+//        //testing
+//        TreeMultimap<string,Movie*>::Iterator it = m_directorToMovies.find(dirsv[0]);
+//        while(it.is_valid()) {
+//            cerr << "Director: " << dirsv[0] << it.get_value()->get_title() << endl;
+//            it.advance();
+//        }
+        
+        
+        for(int i = 0; i < actorsv.size(); i++) {
+            m_actorToMovies.insert(toLower(actorsv[i]), mPtr);
+        }
+        for(int i = 0; i < genresv.size(); i++) {
+            m_genreToMovies.insert(toLower(genresv[i]), mPtr);
+        }
         string junk; getline(infile, junk);
 
     }
@@ -51,27 +73,46 @@ bool MovieDatabase::load(const string& filename)
 
 Movie* MovieDatabase::get_movie_from_id(const string& id) const
 {
-    TreeMultimap<string,Movie>::Iterator it = m_movies.find(id);
+    TreeMultimap<string,Movie*>::Iterator it = m_movies.find(id);
     if(it.is_valid()) {
-        return &it.get_value();
+        return it.get_value();
     }
     return nullptr;
 }
 
 vector<Movie*> MovieDatabase::get_movies_with_director(const string& director) const
 {
-    return vector<Movie*>();  // Replace this line with correct code.
+    vector<Movie*> mv;
+    TreeMultimap<string,Movie*>::Iterator it = m_directorToMovies.find(toLower(director));
+    while(it.is_valid()) {
+//        cerr << it.get_value()->get_title();
+        mv.push_back(it.get_value());
+        it.advance();
+    }
+    return mv;
 }
 
 vector<Movie*> MovieDatabase::get_movies_with_actor(const string& actor) const
 {
-    return vector<Movie*>();  // Replace this line with correct code.
-}
+    vector<Movie*> mv;
+    TreeMultimap<string,Movie*>::Iterator it = m_actorToMovies.find(toLower(actor));
+    while(it.is_valid()) {
+//        cerr << it.get_value()->get_title();
+        mv.push_back(it.get_value());
+        it.advance();
+    }
+    return mv;}
 
 vector<Movie*> MovieDatabase::get_movies_with_genre(const string& genre) const
 {
-    return vector<Movie*>();  // Replace this line with correct code.
-}
+    vector<Movie*> mv;
+    TreeMultimap<string,Movie*>::Iterator it = m_genreToMovies.find(toLower(genre));
+    while(it.is_valid()) {
+//        cerr << it.get_value()->get_title();
+        mv.push_back(it.get_value());
+        it.advance();
+    }
+    return mv;}
 
 vector<string> MovieDatabase::split(string s) {
     string word = "";
@@ -92,4 +133,12 @@ vector<string> MovieDatabase::split(string s) {
     }
     if(word.size() > 0) {vs.push_back(word);}
     return vs;
+}
+
+string MovieDatabase::toLower(string s) const {
+    string result;
+    for(int i = 0; i < s.size(); i++) {
+        result += tolower(s.at(i));
+    }
+    return result;
 }

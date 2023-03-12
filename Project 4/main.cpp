@@ -1,7 +1,7 @@
 #include "UserDatabase.h"
 #include "User.h"
 #include "Movie.h"
-#include "MovieDatabase.h""
+#include "MovieDatabase.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -23,6 +23,12 @@ using namespace std;
   // purposes, you may want to create some small, simple user and movie
   // data files to makde debuggiing easier, so you can replace the string
   // literals with the names of those smaller files.
+
+void dumpMoviePtrVec(vector<Movie*> v) {
+    for(int i = 0; i < v.size(); i++) {
+        std::cerr << v[i]->get_title() << std::endl;
+    }
+}
 
 const string USER_DATAFILE  = "users.txt";
 const string MOVIE_DATAFILE = "movies.txt";
@@ -55,6 +61,20 @@ int main()
         cout << "Failed to load movie data file " << MOVIE_DATAFILE << "!" << endl;
         return 1;
     }
+    
+    string DIR = "Michael bay";
+    string ACT = "natalie portman";
+    string GEN = "sci-fi";
+    
+    cerr << endl << DIR << ": " << endl;
+    dumpMoviePtrVec(mdb.get_movies_with_director(DIR));
+    cerr << endl << ACT << ": " << endl;
+    dumpMoviePtrVec(mdb.get_movies_with_actor(ACT));
+    cerr << endl << GEN << ": " << endl;
+    dumpMoviePtrVec(mdb.get_movies_with_genre(GEN));
+    
+    
+    
     for (;;)
     {
         cout << "Enter movie id: (or quit)";
@@ -65,8 +85,10 @@ int main()
         Movie* m = mdb.get_movie_from_id(id);
         if (m == nullptr)
             cout << "No movie in the database has that id." << endl;
-        else
+        else {
             cout << "Found " << m->get_title() << endl;
+            
+        }
     }
 }
 //
