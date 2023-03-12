@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include "Movie.h"
+#include "treemm.h"
 
 class Movie;
 
@@ -17,6 +19,10 @@ class MovieDatabase
     std::vector<Movie*> get_movies_with_genre(const std::string& genre) const;
 
   private:
+    TreeMultimap<std::string,Movie> m_movies;
+    bool m_loaded;
+    std::vector<std::string> split(std::string s);
+    
 };
 
 #endif // MOVIEDATABASE_INCLUDED

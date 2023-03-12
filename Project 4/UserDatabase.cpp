@@ -25,7 +25,8 @@ bool UserDatabase::load(const string& filename)
     }
     
     while(infile) {
-        string name; getline(infile, name);
+        string name;
+        if(!getline(infile, name)) {break;};
         string email; getline(infile, email);
         vector<string> movies;
         int numMovies; infile >> numMovies; // Need to do the fix thing??
@@ -37,7 +38,8 @@ bool UserDatabase::load(const string& filename)
         User u(name, email, movies);
         m_users.insert(email, u);
         
-        string junk; getline(infile, junk);
+        string junk;
+        if(!getline(infile, junk)) {break;};
 
     }
     

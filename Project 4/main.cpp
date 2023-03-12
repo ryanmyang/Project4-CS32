@@ -1,5 +1,7 @@
 #include "UserDatabase.h"
 #include "User.h"
+#include "Movie.h"
+#include "MovieDatabase.h""
 #include <iostream>
 #include <string>
 using namespace std;
@@ -27,25 +29,45 @@ const string MOVIE_DATAFILE = "movies.txt";
 
 int main()
 {
-	UserDatabase udb;
-	if (!udb.load(USER_DATAFILE))  // In skeleton, load always return false
-	{
-		cout << "Failed to load user data file " << USER_DATAFILE << "!" << endl;
-		return 1;
-	}
-	for (;;)
-	{
-		cout << "Enter user email address (or quit): ";
-		string email;
-		getline(cin, email);
-		if (email == "quit")
-			return 0;
-		User* u = udb.get_user_from_email(email);
-		if (u == nullptr)
-			cout << "No user in the database has that email address." << endl;
-		else
-			cout << "Found " << u->get_full_name() << endl;
-	}
+//	UserDatabase udb;
+//	if (!udb.load(USER_DATAFILE))  // In skeleton, load always return false
+//	{
+//		cout << "Failed to load user data file " << USER_DATAFILE << "!" << endl;
+//		return 1;
+//	}
+//	for (;;)
+//	{
+//		cout << "Enter user email address (or quit): ";
+//		string email;
+//		getline(cin, email);
+//		if (email == "quit")
+//			return 0;
+//		User* u = udb.get_user_from_email(email);
+//		if (u == nullptr)
+//			cout << "No user in the database has that email address." << endl;
+//		else
+//			cout << "Found " << u->get_full_name() << endl;
+//	}
+    
+    MovieDatabase mdb;
+    if (!mdb.load(MOVIE_DATAFILE))  // In skeleton, load always return false
+    {
+        cout << "Failed to load movie data file " << MOVIE_DATAFILE << "!" << endl;
+        return 1;
+    }
+    for (;;)
+    {
+        cout << "Enter movie id: (or quit)";
+        string id;
+        getline(cin, id);
+        if (id == "quit")
+            return 0;
+        Movie* m = mdb.get_movie_from_id(id);
+        if (m == nullptr)
+            cout << "No movie in the database has that id." << endl;
+        else
+            cout << "Found " << m->get_title() << endl;
+    }
 }
 //
 //#include "treemm.h"

@@ -150,6 +150,8 @@ class TreeMultimap
         Node* right;
     };
     Node* m_head;
+    
+    // Recursively delete all nodes
     void deleteHelper(Node* n) {
         if(!n) {return;}
         deleteHelper(n->left);
