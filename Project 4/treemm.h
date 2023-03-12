@@ -1,7 +1,8 @@
 #ifndef TREEMULTIMAP_INCLUDED
 #define TREEMULTIMAP_INCLUDED
 
-#include <iostream> // How does including work for iostream
+#include <iostream> // How does including work in h file
+#include <vector>
 
 template <typename KeyType, typename ValueType>
 class TreeMultimap
@@ -18,7 +19,7 @@ class TreeMultimap
 
         ValueType& get_value() const
         {
-            return m_vals[index];  // Replace this line with correct code.
+            return (*m_vals)[index];  // Replace this line with correct code.
         }
 
         bool is_valid() const
@@ -51,8 +52,10 @@ class TreeMultimap
 
     void insert(const KeyType& key, const ValueType& value)
     {
+        // If empty, insert at beginning and exit
         if (m_head==nullptr) {
             m_head = new Node(key, value);
+            return;
         }
         Node* n = m_head;
         // If empty, just create here
@@ -103,26 +106,32 @@ class TreeMultimap
         Node* n = m_head;
         
         while(true) {
+            if(n==nullptr) {
+                return Iterator(nullptr);
+            }
             
-            // HERE
-            // If value equal, add and leave
             if (n->key == key) {
                 return Iterator(&(n->vals));
             }
             
             // LEFT
             // If left go left
-            if(key < n->key && n->left != nullptr) {
+            if(key < n->key) {
                     n = n->left;
                     continue;
             }
             
             // Right
             // If left go left
-            if(key > n->key && n->right != nullptr) {
+            if(key > n->key) {
                     n = n->right;
                     continue;
             }
+            
+            // HERE
+            
+            
+            
         }
         return Iterator(nullptr);
     }

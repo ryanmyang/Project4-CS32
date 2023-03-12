@@ -3,19 +3,53 @@
 
 #include <string>
 #include <vector>
+
+#include <iostream>
+#include <fstream>
+
 using namespace std;
 
 UserDatabase::UserDatabase()
 {
-    // Replace this line with correct code.
+    m_loaded = false;
 }
 
 bool UserDatabase::load(const string& filename)
 {
-    return false;  // Replace this line with correct code.
+    if(m_loaded) {return false;}
+    
+    ifstream infile(filename);
+    if(!infile) {
+//        cerr << "Error, file not loaded" << endl;
+        return false;
+    }
+    
+    while(infile) {
+        string name; getline(infile, name);
+        string email; getline(infile, email);
+        vector<string> movies;
+        int numMovies; infile >> numMovies; // Need to do the fix thing??
+        infile.ignore(10000, '\n');
+        for(int i = 0; i < numMovies; i++) {
+            string movie; getline(infile, movie);
+            movies.push_back(movie);
+        }
+        User u(name, email, movies);
+        m_users.insert(email, u);
+        
+        string junk; getline(infile, junk);
+
+    }
+    
+    return true;
+    
 }
 
 User* UserDatabase::get_user_from_email(const string& email) const
 {
-    return nullptr;  // Replace this line with correct code.
+    TreeMultimap<string,User>::Iterator it = m_users.find(email);
+    if(it.is_valid()) {
+        return &it.get_value();
+    }
+    return nullptr;
 }
