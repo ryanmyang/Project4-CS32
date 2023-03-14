@@ -45,6 +45,7 @@ bool MovieDatabase::load(const string& filename)
 
         
         Movie* mPtr = new Movie(id, name, year, dirsv, actorsv, genresv, rating);
+        allMoviePtrs.push_back(mPtr);
         m_movies.insert(id, mPtr);
         for(int i = 0; i < dirsv.size(); i++) {
             m_directorToMovies.insert(toLower(dirsv[i]), mPtr); // issue is im inserting the address of

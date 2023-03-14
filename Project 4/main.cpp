@@ -4,6 +4,7 @@
 #include "MovieDatabase.h"
 #include <iostream>
 #include <string>
+#include <chrono>
 #include "Recommender.h"
 using namespace std;
 
@@ -36,7 +37,7 @@ const string& user_email,
 int num_recommendations) {
 // get up to ten movie recommendations for the user
 vector<MovieAndRank> recommendations =
-r.recommend_movies(user_email, 10);
+r.recommend_movies(user_email, num_recommendations);
 if (recommendations.empty())
 cout << "We found no movies to recommend :(.\n";
 else {
@@ -57,12 +58,18 @@ const string MOVIE_DATAFILE = "movies.txt";
 
 int main()
 {
+    auto start = chrono::steady_clock::now();
+
 	UserDatabase udb;
 	if (!udb.load(USER_DATAFILE))  // In skeleton, load always return false
 	{
 		cout << "Failed to load user data file " << USER_DATAFILE << "!" << endl;
 		return 1;
 	}
+    auto stop = chrono::steady_clock::now();
+    std::cerr << "Loaded Users " << std::endl;
+    cout << "Took " << (chrono::duration_cast<chrono::milliseconds>(stop - start).count()) << "ms" << endl;
+    start = chrono::steady_clock::now();
 //	for (;;)
 //	{
 //		cout << "Enter user email address (or quit): ";
@@ -83,7 +90,10 @@ int main()
         cout << "Failed to load movie data file " << MOVIE_DATAFILE << "!" << endl;
         return 1;
     }
-    
+    stop = chrono::steady_clock::now();
+    std::cerr << "Loaded Movies " << std::endl;
+    cout << "Took " << (chrono::duration_cast<chrono::milliseconds>(stop - start).count()) << "ms" << endl;
+    start = chrono::steady_clock::now();
 //    string DIR = "Michael bay";
 //    string ACT = "natalie portman";
 //    string GEN = "sci-fi";
@@ -115,7 +125,15 @@ int main()
 //
 //        }
 //    }
+    stop = chrono::steady_clock::now();
+
+    cout << "Took " << (chrono::duration_cast<chrono::milliseconds>(stop - start).count()) << "ms" << endl;
 }
+
+
+
+
+// ---- Old Treemm testing ----
 //
 //#include "treemm.h"
 //#include <iostream>
