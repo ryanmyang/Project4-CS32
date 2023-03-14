@@ -4,6 +4,7 @@
 #include "MovieDatabase.h"
 #include <iostream>
 #include <string>
+#include "Recommender.h"
 using namespace std;
 
 //////////////////////////i/////////////////////////////////////////////////////
@@ -29,18 +30,39 @@ void dumpMoviePtrVec(vector<Movie*> v) {
         std::cerr << v[i]->get_title() << std::endl;
     }
 }
+void findMatches(const Recommender& r,
+const MovieDatabase& md,
+const string& user_email,
+int num_recommendations) {
+// get up to ten movie recommendations for the user
+vector<MovieAndRank> recommendations =
+r.recommend_movies(user_email, 10);
+if (recommendations.empty())
+cout << "We found no movies to recommend :(.\n";
+else {
+for (int i = 0; i < recommendations.size(); i++) {
+    const MovieAndRank& mr = recommendations[i];
+Movie* m = md.get_movie_from_id(mr.movie_id);
+cout << i << ". " << m->get_title() << " ("
+<< m->get_release_year() << ")\n Rating: "
+<< m->get_rating() << "\n Compatibility Score: "
+<< mr.compatibility_score << "\n";
+}
+}
+}
+    
 
 const string USER_DATAFILE  = "users.txt";
 const string MOVIE_DATAFILE = "movies.txt";
 
 int main()
 {
-//	UserDatabase udb;
-//	if (!udb.load(USER_DATAFILE))  // In skeleton, load always return false
-//	{
-//		cout << "Failed to load user data file " << USER_DATAFILE << "!" << endl;
-//		return 1;
-//	}
+	UserDatabase udb;
+	if (!udb.load(USER_DATAFILE))  // In skeleton, load always return false
+	{
+		cout << "Failed to load user data file " << USER_DATAFILE << "!" << endl;
+		return 1;
+	}
 //	for (;;)
 //	{
 //		cout << "Enter user email address (or quit): ";
@@ -62,34 +84,37 @@ int main()
         return 1;
     }
     
-    string DIR = "Michael bay";
-    string ACT = "natalie portman";
-    string GEN = "sci-fi";
+//    string DIR = "Michael bay";
+//    string ACT = "natalie portman";
+//    string GEN = "sci-fi";
+    string EMAIL = "CaRiv7@cox.net";
+//
+//    cerr << endl << DIR << ": " << endl;
+//    dumpMoviePtrVec(mdb.get_movies_with_director(DIR));
+//    cerr << endl << ACT << ": " << endl;
+//    dumpMoviePtrVec(mdb.get_movies_with_actor(ACT));
+//    cerr << endl << GEN << ": " << endl;
+//    dumpMoviePtrVec(mdb.get_movies_with_genre(GEN));
+
+    Recommender rec(udb, mdb);
+//    rec.recommend_movies(EMAIL, 10);
+    findMatches(rec, mdb, EMAIL, 10);
     
-    cerr << endl << DIR << ": " << endl;
-    dumpMoviePtrVec(mdb.get_movies_with_director(DIR));
-    cerr << endl << ACT << ": " << endl;
-    dumpMoviePtrVec(mdb.get_movies_with_actor(ACT));
-    cerr << endl << GEN << ": " << endl;
-    dumpMoviePtrVec(mdb.get_movies_with_genre(GEN));
-    
-    
-    
-    for (;;)
-    {
-        cout << "Enter movie id: (or quit)";
-        string id;
-        getline(cin, id);
-        if (id == "quit")
-            return 0;
-        Movie* m = mdb.get_movie_from_id(id);
-        if (m == nullptr)
-            cout << "No movie in the database has that id." << endl;
-        else {
-            cout << "Found " << m->get_title() << endl;
-            
-        }
-    }
+//    for (;;)
+//    {
+//        cout << "Enter movie id: (or quit)";
+//        string id;
+//        getline(cin, id);
+//        if (id == "quit")
+//            return 0;
+//        Movie* m = mdb.get_movie_from_id(id);
+//        if (m == nullptr)
+//            cout << "No movie in the database has that id." << endl;
+//        else {
+//            cout << "Found " << m->get_title() << endl;
+//
+//        }
+//    }
 }
 //
 //#include "treemm.h"

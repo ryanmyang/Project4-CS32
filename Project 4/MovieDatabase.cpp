@@ -9,7 +9,7 @@ using namespace std;
 
 MovieDatabase::MovieDatabase()
 {
-    // Replace this line with correct code.
+    m_loaded = false;
 }
 
 MovieDatabase::~MovieDatabase() {
@@ -67,6 +67,7 @@ bool MovieDatabase::load(const string& filename)
 
     }
 
+    m_loaded = true;
     return true;
     
 }

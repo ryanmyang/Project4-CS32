@@ -3,9 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <set>
+
 
 class UserDatabase;
 class MovieDatabase;
+class Movie;
 
 struct MovieAndRank
 {
@@ -26,6 +29,12 @@ class Recommender
                                                int movie_count) const;
 
   private:
+    const UserDatabase* m_udb;
+    const MovieDatabase* m_mdb;
+    MovieAndRank movieToRankedMovie(Movie *m, std::set<std::string> &u_directors, std::set<std::string> &u_actors, std::set<std::string> &u_genres) const;
+    template <typename one, typename two>
+    void vecIntoSet(std::vector<one> v, std::set<two> &us) const;
+    bool compareMovieAndRanks(const Recommender& recommender, MovieAndRank& first, MovieAndRank& second) const;
 };
 
 #endif // RECOMMENDER_INCLUDED
