@@ -121,17 +121,16 @@ vector<string> MovieDatabase::split(string s) {
     vector<string> vs;
     for (int i = 0; i < s.length(); i++) {
         if(s.at(i) == ',') {
-            i++;
             vs.push_back(word);
             word = "";
             continue;
         }
-        try {
+//        try {
         word += s.at(i);
-        }
-        catch(...) {
-            cerr << s << "num" << i  << " length: " << s.length() << endl;
-        }
+//        }
+//        catch(...) {
+//            cerr << s << "num" << i  << " length: " << s.length() << endl;
+//        }
     }
     if(word.size() > 0) {vs.push_back(word);}
     return vs;
