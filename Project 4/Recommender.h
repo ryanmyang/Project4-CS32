@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <set>
+#include <unordered_set>
 
 
 class UserDatabase;
@@ -31,9 +31,9 @@ class Recommender
   private:
     const UserDatabase* m_udb;
     const MovieDatabase* m_mdb;
-    MovieAndRank movieToRankedMovie(Movie *m, std::set<std::string> &u_directors, std::set<std::string> &u_actors, std::set<std::string> &u_genres) const;
+    MovieAndRank movieToRankedMovie(Movie *m, std::unordered_set<std::string> &u_directors, std::unordered_set<std::string> &u_actors, std::unordered_set<std::string> &u_genres) const;
     template <typename one, typename two>
-    void vecIntoSet(std::vector<one> v, std::set<two> &us) const;
+    void vecIntounordered_set(std::vector<one> v, std::unordered_set<two> &us) const;
     bool compareMovieAndRanks(const Recommender& recommender, MovieAndRank& first, MovieAndRank& second) const;
 };
 

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <set>
+#include <unordered_set>
 using namespace std;
 
 Recommender::Recommender(const UserDatabase& user_database,
@@ -22,10 +22,10 @@ vector<MovieAndRank> Recommender::recommend_movies(const string& user_email, int
     User* user = m_udb->get_user_from_email(user_email);
     
     vector<string> history = user->get_watch_history();
-    set<string> all_directors;
-    set<string> all_actors;
-    set<string> all_genres;
-    set<Movie*> all_movies;
+    unordered_set<string> all_directors;
+    unordered_set<string> all_actors;
+    unordered_set<string> all_genres;
+    unordered_set<Movie*> all_movies;
     vector<MovieAndRank> result;
     
     // Go through every movie and make master list of all directors, actors, and genres that the person has watched
@@ -34,24 +34,24 @@ vector<MovieAndRank> Recommender::recommend_movies(const string& user_email, int
         vector<string> dirs = m->get_directors();
         vector<string> actors = m->get_actors();
         vector<string> genres = m->get_genres();
-        vecIntoSet<string, string>(dirs, all_directors);
-        vecIntoSet<string, string>(actors, all_actors);
-        vecIntoSet<string, string>(genres, all_genres);
+        vecIntounordered_set<string, string>(dirs, all_directors);
+        vecIntounordered_set<string, string>(actors, all_actors);
+        vecIntounordered_set<string, string>(genres, all_genres);
     }
     
     // Add all movies of user's directors into all_movies
-    // For each user director, add all movies with that director into set
-    for (set<string>::iterator it = all_directors.begin(); it != all_directors.end(); it++) {
-        vecIntoSet<Movie*, Movie*>(m_mdb->get_movies_with_director(*it), all_movies);
+    // For each user director, add all movies with that director into unordered_set
+    for (unordered_set<string>::iterator it = all_directors.begin(); it != all_directors.end(); it++) {
+        vecIntounordered_set<Movie*, Movie*>(m_mdb->get_movies_with_director(*it), all_movies);
     }
     
     // Add all movies of user's actors into all_movies
-    for (set<string>::iterator it = all_actors.begin(); it != all_actors.end(); it++) {
-        vecIntoSet<Movie*, Movie*>(m_mdb->get_movies_with_actor(*it), all_movies);
+    for (unordered_set<string>::iterator it = all_actors.begin(); it != all_actors.end(); it++) {
+        vecIntounordered_set<Movie*, Movie*>(m_mdb->get_movies_with_actor(*it), all_movies);
     }
     // Add all movies of user's genres into all_movies
-    for (set<string>::iterator it = all_genres.begin(); it != all_genres.end(); it++) {
-        vecIntoSet<Movie*, Movie*>(m_mdb->get_movies_with_genre(*it), all_movies);
+    for (unordered_set<string>::iterator it = all_genres.begin(); it != all_genres.end(); it++) {
+        vecIntounordered_set<Movie*, Movie*>(m_mdb->get_movies_with_genre(*it), all_movies);
     }
     
     // Remove history movies 39662 to 39548 ✓
@@ -60,7 +60,7 @@ vector<MovieAndRank> Recommender::recommend_movies(const string& user_email, int
     }
     
     // Convert all into movie and ranks
-    for (set<Movie*>::iterator it = all_movies.begin(); it != all_movies.end(); it++) {
+    for (unordered_set<Movie*>::iterator it = all_movies.begin(); it != all_movies.end(); it++) {
         result.push_back( movieToRankedMovie(*it, all_directors, all_actors, all_genres) );
     }
     
@@ -75,7 +75,7 @@ vector<MovieAndRank> Recommender::recommend_movies(const string& user_email, int
     return finalResult;
 }
 
-MovieAndRank Recommender::movieToRankedMovie(Movie *m, set<string> &u_directors, set<string> &u_actors, set<string> &u_genres) const {
+MovieAndRank Recommender::movieToRankedMovie(Movie *m, unordered_set<string> &u_directors, unordered_set<string> &u_actors, unordered_set<string> &u_genres) const {
     int score = 0;
     vector<string> dirs = m->get_directors();
     vector<string> acts = m->get_actors();
@@ -105,7 +105,7 @@ MovieAndRank Recommender::movieToRankedMovie(Movie *m, set<string> &u_directors,
 }
 
 template <typename one, typename two>
-void Recommender::vecIntoSet(vector<one> v, set<two> &us) const {
+void Recommender::vecIntounordered_set(vector<one> v, unordered_set<two> &us) const {
     for(int i = 0; i < v.size(); i++) {
         us.insert(v[i]);
     }

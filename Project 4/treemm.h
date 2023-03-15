@@ -16,7 +16,10 @@ class TreeMultimap
             m_vals = vals;
             index = 0;
         }
-
+        Iterator() {
+            m_vals = nullptr;
+            index = 0;
+        }
         ValueType& get_value() const
         {
             return (*m_vals)[index];  // Replace this line with correct code.

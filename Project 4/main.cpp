@@ -108,7 +108,7 @@ int main()
 
     Recommender rec(udb, mdb);
 //    rec.recommend_movies(EMAIL, 10);
-    findMatches(rec, mdb, EMAIL, 10);
+    findMatches(rec, mdb, EMAIL, 5);
     
 //    for (;;)
 //    {
